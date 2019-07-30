@@ -3,6 +3,7 @@ gphotos-cli.py - Steve Newbury, 2019
 
 A basic photo manager to sync your photos from Google Photos to local storage
 """
+import argparse
 import datetime
 import os
 import shelve
@@ -18,13 +19,13 @@ from tqdm import tqdm
 
 class GooglePhotosService(object):
 
-    def __init__(self, creds_file, scopes):
+    def __init__(self, creds_file, scopes, flags):
         store = file.Storage(creds_file)
         creds = store.get()
         if not creds or creds.invalid:
             flow = client.OAuth2WebServerFlow(client_id='330748126588-jdcnokqu0qejifauaet2o7r0de55h1mp.apps.googleusercontent.com',
                 client_secret='ufZwchZoRofvSN4pdAdbc-yy', scope=scopes)
-            creds = tools.run_flow(flow, store)
+            creds = tools.run_flow(flow, store, flags)
         self.service = build('photoslibrary', 'v1', http=creds.authorize(Http()))
 
     def get_media_items(self, size=99, next_token=None):
@@ -37,15 +38,22 @@ class GooglePhotosService(object):
 
 class GphotosCli(object):
 
-    def __init__(self, dest_dir=None):
+    def __init__(self, flags, dest_dir=None, account=None):
         self.prog_dir = os.path.expanduser('~/.config/gphotos-cli')
-        self.dest_dir = os.path.expanduser('~/google-photos')
+        if dest_dir:
+            self.dest_dir = os.path.expanduser(dest_dir)
+        else:
+            self.dest_dir = os.path.expanduser('~/google-photos')
         self.library_file_path = os.path.join(self.prog_dir, 'gphotos-cli_library_shelf')
-        self.creds_file_path = os.path.join(self.prog_dir, 'creds.json')
+        if account:
+            creds_file_name = '%s-creds.json'
+        else:
+            creds_file_name = 'creds.json'
+        self.creds_file_path = os.path.join(self.prog_dir, creds_file_name)
         self.media_items = {}
         self.make_dirs() # do this first, will exit if dirs creation fails
         self.scopes = 'https://www.googleapis.com/auth/photoslibrary.readonly'
-        self.gpservice = GooglePhotosService(self.creds_file_path, self.scopes)
+        self.gpservice = GooglePhotosService(self.creds_file_path, self.scopes, flags)
         self.library = shelve.open(self.library_file_path)
 
     def __enter__(self):
@@ -111,11 +119,29 @@ class GphotosCli(object):
                 self.library[photo_obj['id']] = photo_obj
                 downloads += 1
         print('Downloaded %s new photos' % counter)
+
+def do_args():
+    parser = argparse.ArgumentParser(description='gphotos-cli - Steve Newbury 2019 - version 0.1', parents=[tools.argparser])
+    # Oauth has its own set of flags which it sets up itself (tools.argparser). Pass in the parent to catch them and add them to our flags
+    parser.add_argument('-n', '--nodl', action='store_true', help="No Download - synchronises a list of existing files. Handy for initial sync of photo library.")
+    parser.add_argument('-d', '--debug', action='store_true', help="Debug mode")
+    parser.add_argument('-o', '--overwrite', action='store_true', help="Force overwrite of files that were already downloaded.")
+    parser.add_argument('-a', '--account', action='store', help="Specify the Google account you are logging in with.")
+    parser.add_argument('-D', '--destination_path', action='store', help="Specify the destination path for downloaded photos.") # doesnt affect cache of previously downloaded photos
+    args = parser.parse_args()
+    return args
        
 def main():
-    with GphotosCli() as gpcli:
-        gpcli.download_new_files()
+    args = do_args()
+    with GphotosCli(args, dest_dir=args.destination_path, account=args.account) as gpcli:
+        try:
+            gpcli.download_new_files()
+        except KeyboardInterrupt:
+            print('\nStop requested - exiting...')
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
 
 if __name__ == '__main__':
     main()
-
