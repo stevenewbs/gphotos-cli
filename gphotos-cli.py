@@ -44,11 +44,13 @@ class GphotosCli(object):
             self.dest_dir = os.path.expanduser(dest_dir)
         else:
             self.dest_dir = os.path.expanduser('~/google-photos')
-        self.library_file_path = os.path.join(self.prog_dir, 'gphotos-cli_library_shelf')
+        
         if account:
-            creds_file_name = '%s-creds.json'
+            creds_file_name = '%s-creds.json' % account
+            self.library_file_path = os.path.join(self.prog_dir, '%s-gphotos-cli_library_shelf' % account)
         else:
             creds_file_name = 'creds.json'
+            self.library_file_path = os.path.join(self.prog_dir, 'gphotos-cli_library_shelf')
         self.creds_file_path = os.path.join(self.prog_dir, creds_file_name)
         self.media_items = {}
         self.make_dirs() # do this first, will exit if dirs creation fails
@@ -87,9 +89,12 @@ class GphotosCli(object):
             else:
                 break
 
-    def download_photo(self, photo_obj):
+    def download_item(self, photo_obj):
         # Photos API object URL needs a flag to indicate download
-        dl_flag = '=d'
+        if 'video' in photo_obj['mimeType']:
+            dl_flag = '=dv'
+        else:
+            dl_flag = '=d'
         base_url = photo_obj['baseUrl']
         download_url = base_url + dl_flag
         filename = photo_obj['filename']
@@ -115,10 +120,10 @@ class GphotosCli(object):
             id = photo_obj['id']
             if id in self.library:
                 continue
-            if self.download_photo(photo_obj):
+            if self.download_item(photo_obj):
                 self.library[photo_obj['id']] = photo_obj
                 downloads += 1
-        print('Downloaded %s new photos' % counter)
+        print('Downloaded %s new photos' % downloads)
 
 def do_args():
     parser = argparse.ArgumentParser(description='gphotos-cli - Steve Newbury 2019 - version 0.1', parents=[tools.argparser])
