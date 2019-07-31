@@ -32,7 +32,7 @@ class GooglePhotosService(object):
         try:
             result = self.service.mediaItems().list(pageSize=size, pageToken=next_token).execute()
         except HttpError as err:
-            log('HttpError while requesting photo list : %s' % err)
+            print('HttpError while requesting photo list : %s' % err)
             raise
         return result     
 
@@ -69,7 +69,7 @@ class GphotosCli(object):
                 try:
                     os.mkdir(path)
                 except IOError as e:
-                    log("Error creating %s dir: %s " % (path, e))
+                    print("Error creating %s dir: %s " % (path, e))
                     sys.exit(1)
 
     def populate_media_items(self):
@@ -100,10 +100,10 @@ class GphotosCli(object):
             with open(path, 'wb') as f:
                 f.write(photo_bytes)
         except URLError as urle:
-            log('Urlopen error while downloading %s : %s' % (filename, urle))
+            print('Urlopen error while downloading %s : %s' % (filename, urle))
             return False
         except IOError as e:
-            log('IOError while writing %s : %s' % (filename, e))
+            print('IOError while writing %s : %s' % (filename, e))
             return False
         return True
 
