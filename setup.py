@@ -1,9 +1,11 @@
 from setuptools import setup, find_packages
 setup(
-    name="gphotos-cli",
+    name="gphotos",
     version="0.1",
     packages=find_packages(),
-    scripts=['gphotos-cli.py']
+    entry_points={
+        'console_scripts':
+            ['gphotos-cli=gphotos.gphotos_cli:main']},
     install_requires=[
         'google-api-python-client-py3',
         'oauth2client'
