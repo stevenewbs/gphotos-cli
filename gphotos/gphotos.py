@@ -40,7 +40,11 @@ class GphotosCli(object):
 
     def __init__(self, flags, dest_dir=None, account=None):
         self.orig_flags = flags
-        self.prog_dir = os.path.expanduser('~/.config/gphotos-cli')
+        if os.environ.get('SNAP_USER_COMMON'):
+            snap_conf = os.environ.get('SNAP_USER_COMMON')
+            self.prog_dir = os.path.expanduser(snap_conf + '/config')
+        else:
+            self.prog_dir = os.path.expanduser('~/.config/gphotos-cli')
         if dest_dir:
             self.dest_dir = os.path.expanduser(dest_dir)
         else:
