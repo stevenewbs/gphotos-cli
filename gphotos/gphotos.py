@@ -19,7 +19,9 @@ class GooglePhotosService(object):
 
     def __init__(self, creds_file, scopes, flags):
         store = file.Storage(creds_file)
-        creds = store.get()
+        creds = None
+        if os.path.exists(creds_file):
+            creds = store.get()
         if not creds or creds.invalid:
             flow = client.OAuth2WebServerFlow(client_id='330748126588-jdcnokqu0qejifauaet2o7r0de55h1mp.apps.googleusercontent.com',
                 client_secret='ufZwchZoRofvSN4pdAdbc-yy', scope=scopes)
@@ -37,6 +39,7 @@ class GooglePhotosService(object):
 class GphotosCli(object):
 
     def __init__(self, flags, dest_dir=None, account=None):
+        self.orig_flags = flags
         self.prog_dir = os.path.expanduser('~/.config/gphotos-cli')
         if dest_dir:
             self.dest_dir = os.path.expanduser(dest_dir)
@@ -53,7 +56,7 @@ class GphotosCli(object):
         self.media_items = {}
         self.make_dirs() # do this first, will exit if dirs creation fails
         self.scopes = 'https://www.googleapis.com/auth/photoslibrary.readonly'
-        self.gpservice = GooglePhotosService(self.creds_file_path, self.scopes, flags)
+        self.setup_service()
         self.library = shelve.open(self.library_file_path)
 
     def __enter__(self):
@@ -62,6 +65,9 @@ class GphotosCli(object):
     def __exit__(self, expt_type, expt_val, trace):
         self.library.sync()
         self.library.close()
+
+    def setup_service(self):
+        self.gpservice = GooglePhotoService(self.creds_file_path, self.scopes, self.orig_flag)
 
     def make_dirs(self):
         for path in [self.prog_dir, self.dest_dir]:
@@ -105,6 +111,12 @@ class GphotosCli(object):
         except URLError as urle:
             print('Urlopen error while downloading %s : %s' % (filename, urle))
             return False
+        except HTTPError as httpe:
+            print('HTTP error while downloading %s : %s' % (filename, httpe))
+            if HTTPError.code == 403:
+                # the token will expire after about an hour, at which point 
+                # the requests start failing with 403 errors
+                return None
         except IOError as e:
             print('IOError while writing %s : %s' % (filename, e))
             return False
@@ -118,8 +130,11 @@ class GphotosCli(object):
             id = photo_obj['id']
             if id in self.library:
                 continue
-            if self.download_item(photo_obj):
+            result = self.download_item(photo_obj)
+            if result:
                 self.library[photo_obj['id']] = photo_obj
                 downloads += 1
+            if result == None:
+                self.setup_service()
         print('Downloaded %s new photos' % downloads)
 
