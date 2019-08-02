@@ -128,7 +128,7 @@ class GphotosCli(object):
 
     def download_new_files(self):
         self.populate_media_items()
-        downloads = counter = 0
+        self.downloaded = 0
         for i in tqdm(self.media_items):
             photo_obj = self.media_items[i]
             id = photo_obj['id']
@@ -137,8 +137,8 @@ class GphotosCli(object):
             result = self.download_item(photo_obj)
             if result:
                 self.library[photo_obj['id']] = photo_obj
-                downloads += 1
+                self.downloaded += 1
             if result == None:
                 self.setup_service()
-        print('Downloaded %s new photos' % downloads)
+        print('Downloaded %s new photos' % self.downloaded)
 

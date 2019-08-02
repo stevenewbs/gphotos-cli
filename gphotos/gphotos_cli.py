@@ -26,7 +26,8 @@ def main():
         try:
             gpcli.download_new_files()
         except KeyboardInterrupt:
-            print('\nStop requested - exiting...')
+            print('\nStop requested')
+            print('\n%s new items downloaded - exiting...' % gpcli.downloaded)
         try:
             sys.exit(0)
         except SystemExit:
