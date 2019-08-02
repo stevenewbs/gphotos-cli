@@ -9,6 +9,7 @@ setup(
     install_requires=[
         'google-api-python-client-py3',
         'oauth2client'
+        'tqdm'
         ],
 
     author="Steve Newbury",

@@ -67,7 +67,7 @@ class GphotosCli(object):
         for path in [self.prog_dir, self.dest_dir]:
             if not os.path.exists(path):
                 try:
-                    os.mkdir(path)
+                    os.mkdirs(path)
                 except IOError as e:
                     print("Error creating %s dir: %s " % (path, e))
                     sys.exit(1)

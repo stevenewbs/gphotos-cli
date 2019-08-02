@@ -10,9 +10,11 @@ parts:
   gphotos-cli:
     plugin: python
     python-version: python3
-    source: ../
-    python-packages: [google-api-python-client-py3, oauth2client]
-
+    source: https://github.com/stevenewbs/gphotos-cli.git
+    python-packages: [google-api-python-client-py3, oauth2client, tqdm]
+ 
 apps:
   gphotos-cli:
     command: bin/gphotos-cli
+    plugs:
+      - home
