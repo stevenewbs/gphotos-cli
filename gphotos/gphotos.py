@@ -7,7 +7,7 @@ import shelve
 import os
 import sys
 from urllib.request import urlopen
-from urllib.error import URLError
+from urllib.error import URLError, HTTPError
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 from httplib2 import Http
