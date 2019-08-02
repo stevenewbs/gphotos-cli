@@ -8,7 +8,7 @@ setup(
             ['gphotos-cli=gphotos.gphotos_cli:main']},
     install_requires=[
         'google-api-python-client-py3',
-        'oauth2client'
+        'oauth2client',
         'tqdm'
         ],
 
