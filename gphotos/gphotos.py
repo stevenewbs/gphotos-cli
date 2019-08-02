@@ -67,7 +67,7 @@ class GphotosCli(object):
         self.library.close()
 
     def setup_service(self):
-        self.gpservice = GooglePhotosService(self.creds_file_path, self.scopes, self.orig_flag)
+        self.gpservice = GooglePhotosService(self.creds_file_path, self.scopes, self.orig_flags)
 
     def make_dirs(self):
         for path in [self.prog_dir, self.dest_dir]:
