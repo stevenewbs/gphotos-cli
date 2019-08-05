@@ -114,13 +114,12 @@ class GphotosCli(object):
                 f.write(photo_bytes)
         except URLError as urle:
             print('Urlopen error while downloading %s : %s' % (filename, urle))
+            if isinstance(urle.reason, HTTPError):
+                if urle.reason.code == 403:
+                    # the token will expire after about an hour, at which point 
+                    # the requests start failing with 403 errors
+                    return None
             return False
-        except HTTPError as httpe:
-            print('HTTP error while downloading %s : %s' % (filename, httpe))
-            if HTTPError.code == 403:
-                # the token will expire after about an hour, at which point 
-                # the requests start failing with 403 errors
-                return None
         except IOError as e:
             print('IOError while writing %s : %s' % (filename, e))
             return False
@@ -139,6 +138,11 @@ class GphotosCli(object):
                 self.library[photo_obj['id']] = photo_obj
                 self.downloaded += 1
             if result == None:
+                # We got a 403 so restart service and retry
                 self.setup_service()
+                if self.download_item(photo_obj):
+                    self.library[photo_obj['id']] = photo_obj
+                    self.downloaded += 1
+
         print('Downloaded %s new photos' % self.downloaded)
 
