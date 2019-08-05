@@ -2,6 +2,8 @@ gphotos-cli
 -----
 A (very unofficial) Google Photos command line client to download your photos/videos to local storage.
 
+[![Snap Status](https://build.snapcraft.io/badge/stevenewbs/gphotos-cli.svg)](https://build.snapcraft.io/user/stevenewbs/gphotos-cli)
+
 Requirements
 -----
 * Python3
