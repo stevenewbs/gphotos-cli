@@ -12,6 +12,7 @@ import shelve
 import sys
 from urllib.request import urlopen
 from urllib.error import URLError, HTTPError
+from oauth2client import tools
 
 class GphotosCli(object):
 
