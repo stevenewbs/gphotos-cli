@@ -69,7 +69,7 @@ class GphotosCli(object):
             result = self.gpservice.get_media_items(next_token=npt)
             if 'mediaItems' in result:
                 for i in result['mediaItems']:
-                    self.media_items[i['id']] = i
+                    self.media_items.append(i)
             sys.stdout.flush()
             sys.stdout.write('\r%s items gathered' % len(self.media_items))
             if 'nextPageToken' in result:
