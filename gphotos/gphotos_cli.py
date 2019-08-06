@@ -93,7 +93,7 @@ class GphotosCli(object):
             with open(path, 'wb') as f:
                 f.write(photo_bytes)
         except HTTPError as herr:
-            print('Http Error while downloading %s : %s' % (filename, urle))
+            print('Http Error while downloading %s : %s' % (filename, herr))
             if herr.code == 403:
                 # the URLs for the photos will expire after about an hour, at which point
                 # the requests start failing with 403 errors
