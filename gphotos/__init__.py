@@ -1,1 +1,1 @@
-from gphotos import *
+from .gphotos import *
