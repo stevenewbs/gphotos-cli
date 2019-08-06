@@ -12,7 +12,6 @@ from apiclient.discovery import build
 from apiclient.errors import HttpError
 from httplib2 import Http
 from oauth2client import file, client, tools
-from tqdm import tqdm
 
 
 class GooglePhotosService(object):
