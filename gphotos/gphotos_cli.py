@@ -50,6 +50,11 @@ class GphotosCli(object):
         self.library.sync()
         self.library.close()
 
+    def close_library(self):
+        print('Writing and closing down library')
+        self.library.sync()
+        self.library.close()
+
     def setup_service(self):
         self.gpservice = GooglePhotosService(self.creds_file_path, self.scopes, self.orig_flags)
 
@@ -124,7 +129,7 @@ class GphotosCli(object):
                     i = 0
                     self.populate_media_items()
                 if result:
-                    self.library[photo_obj['id']] = photo_obj
+                    self.library[id] = photo_obj
                     self.downloaded += 1
             counter += 1
             self.print_progress('%s / %s items processed' % (counter, len(self.media_items)))
@@ -150,11 +155,14 @@ def main():
             gpcli.download_new_files()
         except KeyboardInterrupt:
             print('\nStop requested')
-            print('\n%s new items downloaded - exiting...' % gpcli.downloaded)
-        try:
-            sys.exit(0)
-        except SystemExit:
-            os._exit(0)
+            print('\n%s new items downloaded ...' % gpcli.downloaded)
+            gpcli.close_library()
+            try:
+                sys.exit(0)
+            except SystemExit:
+                os._exit(0)
+        finally:
+            gpcli.close_library()
 
 if __name__ == '__main__':
     main()
