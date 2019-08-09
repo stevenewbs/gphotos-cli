@@ -125,7 +125,7 @@ class GphotosCli(object):
                 result = self.download_item(photo_obj)
                 if result == None:
                     # We got a 403 so urls have expired
-                    print('Media Urls have expired - requesting library re-populate')
+                    print('\nMedia Urls have expired - requesting library re-populate')
                     i = 0
                     self.populate_media_items()
                 if result:
@@ -133,7 +133,7 @@ class GphotosCli(object):
                     self.downloaded += 1
             counter += 1
             self.print_progress('%s / %s items processed' % (counter, len(self.media_items)))
-        print('Downloaded %s new items' % self.downloaded)
+        print('\nDownloaded %s new items' % self.downloaded)
 
 
 def do_args():
