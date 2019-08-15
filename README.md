@@ -44,5 +44,6 @@ Options
 
 ToDo
 -----
-Move to use google-auth-oauthlib 0.4.0 as oauth2client is deprecated
+Move to use google-auth-oauthlib 0.4.0 as oauth2client is deprecated.
+
 Upload to Pypy - maybe?

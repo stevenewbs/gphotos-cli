@@ -4,7 +4,7 @@ summary: Unofficial Google Photos command line client
 description: |
   gphotos-cli allows you to download your photos (and videos) to local storage.
 base: core18
-confinement: devmode
+confinement: strict
 
 parts:
   gphotos-cli:
@@ -12,7 +12,7 @@ parts:
     python-version: python3
     source: https://github.com/stevenewbs/gphotos-cli.git
     python-packages: [google-api-python-client-py3, oauth2client, tqdm]
- 
+
 apps:
   gphotos-cli:
     command: bin/gphotos-cli
