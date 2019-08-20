@@ -35,6 +35,7 @@ class GphotosCli(object):
             creds_file_name = 'creds.json'
             self.library_file_path = os.path.join(self.prog_dir, 'gphotos-cli_library_shelf')
         self.overwrite = flags.overwrite
+        self.no_dl = flags.nodl
         self.show_progress = flags.print_progress
         self.creds_file_path = os.path.join(self.prog_dir, creds_file_name)
         self.media_items = {}
@@ -83,6 +84,8 @@ class GphotosCli(object):
                 break
 
     def download_item(self, photo_obj):
+        if self.no_dl:
+            return True
         # Photos API object URL needs a flag to indicate download
         if 'video' in photo_obj['mimeType']:
             dl_flag = '=dv'

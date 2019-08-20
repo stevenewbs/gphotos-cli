@@ -18,3 +18,4 @@ apps:
     command: bin/gphotos-cli
     plugs:
       - home
+      - network
