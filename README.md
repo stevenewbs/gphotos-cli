@@ -6,12 +6,8 @@ A (very unofficial) Google Photos command line client to download your photos/vi
 
 ### TL;DR
 
-    snap install gphotos-cli --edge --devmode
+    snap install gphotos-cli
     gphotos-cli -a <google-account> -D <destination path> -p
-
-
-While the snap is under development, I am not moving it to stable. It will make it there once I'm happy it works as intended.
-
 
 
 ## Running manually:
