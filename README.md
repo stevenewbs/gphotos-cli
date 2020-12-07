@@ -36,7 +36,7 @@ Options
 * -p, --print_progress   : Output progress while downloading media.
 * -a, --account          : Specify the Google account you are logging in with.
 * -D, --destination_path : Specify the destination path for downloaded photos. *NOTE* This doesnt affect cache of previously downloaded photos - that is stored separately.
-* -R, --remove_deleted   : Remove filed that have been deleted from Google Photos. USE WITH CAUTION!!
+* -R, --remove_deleted   : Remove files that have been deleted from Google Photos. USE WITH CAUTION!!
 
 
 ToDo
