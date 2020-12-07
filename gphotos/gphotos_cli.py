@@ -142,13 +142,12 @@ class GphotosCli(object):
     def remove_deleted_files(self):
         if not self.remove_deleted:
             return
-        removed, counter = 0
+        removed = counter = 0
         for i in self.library:
             photo_obj = self.library[i]
             id = photo_obj['id']
             path = self.dest_dir + '/' + photo_obj['filename']
             if id not in self.media_items:
-                print("%s is is Library but not most recent list from Google Photos. Removing...")
                 try:
                     os.remove(path)
                     removed += 1
@@ -156,7 +155,7 @@ class GphotosCli(object):
                     pass
                 counter += 1
             self.print_progress('%s / %s items processed' % (counter, len(self.library)))
-        print('\nDownloaded %s new items' % self.downloaded)
+        print('\nRemoved %s deleted items' % removed)
 
 
 def do_args():
