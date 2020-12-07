@@ -36,6 +36,7 @@ class GphotosCli(object):
             self.library_file_path = os.path.join(self.prog_dir, 'gphotos-cli_library_shelf')
         self.overwrite = flags.overwrite
         self.no_dl = flags.nodl
+        self.remove_deleted = flags.remove_deleted
         self.show_progress = flags.print_progress
         self.creds_file_path = os.path.join(self.prog_dir, creds_file_name)
         self.media_items = {}
@@ -138,6 +139,25 @@ class GphotosCli(object):
             self.print_progress('%s / %s items processed' % (counter, len(self.media_items)))
         print('\nDownloaded %s new items' % self.downloaded)
 
+    def remove_deleted_files(self):
+        if !self.remove_deleted:
+            return
+        removed, counter = 0
+        for i in self.library:
+            photo_obj = self.library[i]
+            id = photo_obj['id']
+            path = self.dest_dir + '/' + photo_obj['filename']
+            if id not in self.media_items:
+                print("%s is is Library but not most recent list from Google Photos. Removing...")
+                try:
+                    os.remove(path)
+                    removed += 1
+                except OSError as e:
+                    pass
+                counter += 1
+            self.print_progress('%s / %s items processed' % (counter, len(self.library)))
+        print('\nDownloaded %s new items' % self.downloaded)
+
 
 def do_args():
     parser = argparse.ArgumentParser(description='gphotos-cli - Steve Newbury 2019 - version 0.1', parents=[tools.argparser])
@@ -148,6 +168,7 @@ def do_args():
     parser.add_argument('-o', '--overwrite', action='store_true', help="Force overwrite of files that were already downloaded.")
     parser.add_argument('-a', '--account', action='store', help="Specify the Google account you are logging in with.")
     parser.add_argument('-D', '--destination_path', action='store', help="Specify the destination path for downloaded photos.") # doesnt affect cache of previously downloaded photos
+    parser.add_argument('-R', '--remove_deleted', action='store_true', help="Remove files that have been removed from GooglePhotos. USE WITH CARE!")
     args = parser.parse_args()
     return args
 
@@ -156,6 +177,7 @@ def main():
     with GphotosCli(args, dest_dir=args.destination_path, account=args.account) as gpcli:
         try:
             gpcli.download_new_files()
+            gclii.remove_deleted_files()
         except KeyboardInterrupt:
             print('\nStop requested')
             print('\n%s new items downloaded ...' % gpcli.downloaded)
