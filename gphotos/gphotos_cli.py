@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-gphotos-cli.py - steve newbury, 2019
+gphotos-cli.py - steve newbury, 2019-2020
 
 A basic command line tool to download your photos/videos from Google Photos to local storage.
 """
