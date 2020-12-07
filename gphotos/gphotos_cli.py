@@ -140,7 +140,7 @@ class GphotosCli(object):
         print('\nDownloaded %s new items' % self.downloaded)
 
     def remove_deleted_files(self):
-        if !self.remove_deleted:
+        if not self.remove_deleted:
             return
         removed, counter = 0
         for i in self.library:
