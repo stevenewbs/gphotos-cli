@@ -177,7 +177,7 @@ def main():
     with GphotosCli(args, dest_dir=args.destination_path, account=args.account) as gpcli:
         try:
             gpcli.download_new_files()
-            gclii.remove_deleted_files()
+            gpcli.remove_deleted_files()
         except KeyboardInterrupt:
             print('\nStop requested')
             print('\n%s new items downloaded ...' % gpcli.downloaded)
