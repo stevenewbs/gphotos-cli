@@ -1,5 +1,10 @@
 gphotos-cli
 -----
+
+**WARNING:** 
+This tool is likely to not work after October 3rd 2022 because it uses now [deprecated OAuth methods](https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html). I don't have any immediate plans to work on this so if you can, please do.
+
+
 A (very unofficial) Google Photos command line client to download your photos/videos to local storage.
 
 [![Snap Status](https://build.snapcraft.io/badge/stevenewbs/gphotos-cli.svg)](https://build.snapcraft.io/user/stevenewbs/gphotos-cli)
